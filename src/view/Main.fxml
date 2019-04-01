@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -10,7 +11,6 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane prefHeight="638.0" prefWidth="1188.0" style="-fx-background-color: #f7620e;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <children>
@@ -23,12 +23,12 @@
       </Label>
       <Line endX="350.0" layoutX="600.0" layoutY="65.0" startX="-350.0" stroke="#f7620e" />
       <Line endX="350.0" layoutX="600.0" layoutY="200.0" startX="-350.0" stroke="#f7620e" />
-      <Label layoutX="260.0" layoutY="110.0" text="Input:" textFill="WHITE">
+      <Label layoutX="220.0" layoutY="110.0" text="Input:" textFill="WHITE">
          <font>
             <Font name="Raleway" size="28.0" />
          </font>
       </Label>
-      <TextField fx:id="decimalInput" layoutX="350.0" layoutY="112.0" prefHeight="30.0" prefWidth="300.0" />
+      <TextField fx:id="decimalInput" layoutX="380.0" layoutY="112.0" prefHeight="30.0" prefWidth="275.0" />
       <ImageView fx:id="logInPic" fitHeight="136.0" fitWidth="136.0" layoutX="795.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../media/orangeBtn.png" />
@@ -49,7 +49,7 @@
             <Font name="Raleway" size="32.0" />
          </font>
       </Label>
-      <TextField fx:id="exponentInput" layoutX="720.0" layoutY="85.0" prefHeight="30.0" prefWidth="75.0" />
+      <TextField fx:id="exponentInput" layoutX="720.0" layoutY="75.0" prefHeight="30.0" prefWidth="75.0" />
       <Label layoutX="260.0" layoutY="225.0" text="Binary Output:" textFill="WHITE">
          <font>
             <Font name="Raleway" size="28.0" />
@@ -120,5 +120,7 @@
             <Font name="Raleway" size="11.0" />
          </font>
       </Label>
+      <ComboBox fx:id="signBox" layoutX="300.0" layoutY="110.0" prefHeight="30.0" prefWidth="64.0" />
+      <ComboBox fx:id="signBoxExpo" layoutX="645.0" layoutY="75.0" prefHeight="30.0" prefWidth="64.0" />
    </children>
 </AnchorPane>
