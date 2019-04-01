@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -35,27 +34,25 @@ public class MainController {
     private static final Pattern decimalPattern2 = Pattern.compile("[0-9]+");
     private static final Pattern exponentPattern = Pattern.compile("[0-9]+");
 
+    private int additionalBits;
     private int sign;
+    private boolean infinityCheck;
+    private boolean nanCheck;
     private String MSD;
     private String exponentBit;
-    private ArrayList binaryList;
     private String input;
-    private int additionalBits;
-
     private String combi;
+    private String exponent2;
+    private String ECB;
+    private ArrayList binaryList;
+
     StringBuilder output1 = new StringBuilder("0000000000");
     StringBuilder output2 = new StringBuilder("0000000000");
     StringBuilder output3 = new StringBuilder("0000000000");
     StringBuilder output4 = new StringBuilder("0000000000");
     StringBuilder output5 = new StringBuilder("0000000000");
 
-    private String exponent2;
-    private String ECB;
-    private boolean infinityCheck;
-    private boolean nanCheck;
-
     public void initialize(){
-        //7111006514671236
         binaryList = new ArrayList();
         additionalBits=0;
         sign=0;
@@ -94,49 +91,81 @@ public class MainController {
             additionalBits=0;
             infinityCheck=false;
             nanCheck=false;
-            if(decimalPattern.matcher(decimalInput.getCharacters()).matches()||decimalPattern2.matcher(decimalInput.getCharacters()).matches()){
+            if(decimalPattern.matcher(decimalInput.getCharacters()).matches()||decimalPattern2.matcher(decimalInput.getCharacters()).matches()||decimalInput.getText().compareToIgnoreCase("NaN")==0){
                 if(decimalInput.getText().contains(".")&&decimalInput.getText().length()<16){
-                    System.out.println("HAS PERIOD");
+                    System.out.println("IF 1");
                     additionalBits=decimalInput.getText().length()-decimalInput.getText().indexOf(".")-1;
                     System.out.println(additionalBits);
                     String test =decimalInput.getText().replace(".","");
                     System.out.println(test);
                     input=String.format("%016d",Long.parseLong(test));
 
-                }else if(decimalInput.getText().contains(".")&&decimalInput.getText().length()>16){
-//                    additionalBits=((decimalInput.getText().indexOf(".")+1)-16);
-//                    String yes = decimalInput.getText().substring(0,15);
-//                    System.out.println(yes);
-//                    System.out.println(additionalBits);
-//                    String[] test =decimalInput.getText().split(".");
-//                    System.out.println(test[0]);
-//                    if(Integer.parseInt(decimalInput.getText().substring(16,16))<5){
-//                        input=String.format("%016d",Long.parseLong(yes));
-//                    }else if (Integer.parseInt(decimalInput.getText().substring(16,16))==5){
-//                        if(Long.parseLong(yes)%2==0){
-//                            input=String.format("%016d",Long.parseLong(yes));
-//                        }else if (Long.parseLong(yes)%2==1){
-//                            input=String.format("%016d",Long.parseLong(yes)+1);
-//
-//                        }
-//                    }else if (Integer.parseInt(decimalInput.getText().substring(16,16))>5){
-//                        input=String.format("%016d",Long.parseLong(yes)+1);
-//                    }
-
+                }else if((decimalInput.getText().contains(".")&&decimalInput.getText().length()>16)){
+                    System.out.println("IF 2");
+                    additionalBits=-decimalInput.getText().indexOf(".")+16;
+                    System.out.println(additionalBits);
+                    String addOn=insertString(decimalInput.getText(),".",15);
+                    System.out.println(addOn);
+                    String[] tempStr=addOn.split("\\.");
+                    System.out.println(tempStr[0]);
+                    System.out.println(tempStr[1]);
+                    if(Integer.parseInt(tempStr[1].charAt(0)+"")>5){
+                        input=String.format("%016d",Long.parseLong(tempStr[0])+1);
+                        System.out.println("IF ELSE 1");
+                    }else if (Integer.parseInt(tempStr[1].charAt(0)+"")==5){
+                        if(Integer.parseInt(tempStr[0].charAt(15)+"")%2==0){
+                            input=String.format("%016d",Long.parseLong(tempStr[0]));
+                            System.out.println("IF ELSE 2.1");
+                        }else if(Integer.parseInt(tempStr[0].charAt(15)+"")%2==1){
+                            input=String.format("%016d",Long.parseLong(tempStr[0])+1);
+                            System.out.println("IF ELSE 2.2");
+                        }
+                    }else {
+                        input=String.format("%016d",Long.parseLong(tempStr[0]));
+                        System.out.println("IF ELSE 3");
+                    }
+                }
+                else if(decimalInput.getText().length()>16){
+                    System.out.println("IF 3");
+                    String addOn=insertString(decimalInput.getText(),".",15);
+                    System.out.println(addOn);
+                    String[] tempStr=addOn.split("\\.");
+                    additionalBits=-tempStr[1].length();
+                    System.out.println(additionalBits);
+                    System.out.println(tempStr[0]);
+                    System.out.println(tempStr[1]);
+                    if(Integer.parseInt(tempStr[1].charAt(0)+"")>5){
+                        input=String.format("%016d",Long.parseLong(tempStr[0])+1);
+                        System.out.println("IF ELSE 1");
+                    }else if (Integer.parseInt(tempStr[1].charAt(0)+"")==5){
+                        if(Integer.parseInt(tempStr[0].charAt(15)+"")%2==0){
+                            input=String.format("%016d",Long.parseLong(tempStr[0]));
+                            System.out.println("IF ELSE 2.1");
+                        }else if(Integer.parseInt(tempStr[0].charAt(15)+"")%2==1){
+                            input=String.format("%016d",Long.parseLong(tempStr[0])+1);
+                            System.out.println("IF ELSE 2.2");
+                        }
+                    }else {
+                        input=String.format("%016d",Long.parseLong(tempStr[0]));
+                        System.out.println("IF ELSE 3");
+                    }
+                }
+                else if (decimalInput.getText().compareToIgnoreCase("NaN")==0){
+                    System.out.println("IF 4");
+                    nanCheck=true;
+                    input = String.format("%016d",0);
+                    System.out.println("NAN DETECTED");
+                }else if ((Integer.parseInt(exponentInput.getText())>399&&signBoxExpo.getValue()=="+")||(Integer.parseInt(exponentInput.getText())>398&&signBoxExpo.getValue()=="-")){
+                    System.out.println("IF 5");
+                    infinityCheck=true;
+                    System.out.println("Infinity DETECTED");
                 }else {
+                    System.out.println("IF 6");
                     input = String.format("%016d", Long.parseLong(decimalInput.getText()));
                     System.out.println(input);
                 }
                 System.out.println("DECIMAL CORRECT");
-                if ((Integer.parseInt(exponentInput.getText())>384&&Integer.parseInt(exponentInput.getText())<=399&&signBoxExpo.getValue()=="+")||(Integer.parseInt(exponentInput.getText())>383&&Integer.parseInt(exponentInput.getText())<=398&&signBoxExpo.getValue()=="-")){
-                    infinityCheck=true;
-                    System.out.println("Infinity DETECTED");
 
-                }
-                else if ((Integer.parseInt(exponentInput.getText())>399&&signBoxExpo.getValue()=="+")||(Integer.parseInt(exponentInput.getText())>398&&signBoxExpo.getValue()=="-")){
-                    nanCheck=true;
-                    System.out.println("NAN DETECTED");
-                }
                 getSign();
                 convertToBinary();
                 getExponent();
@@ -159,9 +188,17 @@ public class MainController {
                 exponentInvalid.setOpacity(1.0);
             }
         });
+    }
 
-
-
+    public static String insertString(String originalString, String stringToBeInserted, int index) {
+        String newString = new String();
+        for (int i = 0; i < originalString.length(); i++) {
+            newString += originalString.charAt(i);
+            if (i == index) {
+                newString += stringToBeInserted;
+            }
+        }
+        return newString;
     }
 
     private void convertToBinary() {
@@ -171,14 +208,12 @@ public class MainController {
             binaryList.add(String.format("%4s", Integer.toBinaryString(Integer.parseInt(inputList[i] + ""))).replace(' ', '0'));
         }
         System.out.println(binaryList);
-
         List<String> list1 = binaryList.subList(1,4);
         System.out.println(list1);
         System.out.println(list1.get(0));
         System.out.println(list1.get(0).charAt(3));
-
-
     }
+
     private void getSign(){
         if(signBox.getValue().toString().compareToIgnoreCase("+")==0){
             sign=0;
@@ -427,7 +462,6 @@ public class MainController {
         return str.toString().toUpperCase();
     }
 
-
     private void output(){
         signOutput.setText(sign+"");
         combiOutput.setText(combi);
@@ -439,5 +473,4 @@ public class MainController {
         man5Output.setText(output5+"");
         hexOutput.setText(hexOutput());
     }
-    //7111006514671236
 }
